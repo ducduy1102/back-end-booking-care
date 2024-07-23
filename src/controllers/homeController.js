@@ -2,7 +2,7 @@ import db from "../models";
 
 const getHomePageController = async (req, res) => {
   try {
-    let data = await db.Users.findAll();
+    let data = await db.Specialties.findAll();
     console.log(data);
     return res.render("homePage.ejs", {
       data: JSON.stringify(data),
