@@ -1,5 +1,5 @@
 import db from "../models";
-import { createNewUser } from "../services/CRUDService";
+import { createNewUser, getAllUser } from "../services/CRUDService";
 
 const getHomePageController = async (req, res) => {
   try {
@@ -23,4 +23,15 @@ const postCRUDController = async (req, res) => {
   return res.send("post crud from server");
 };
 
-export { getHomePageController, getCRUDController, postCRUDController };
+const displayGetCRUDController = async (req, res) => {
+  let data = await getAllUser();
+  console.log("data ", data);
+  return res.render("displayCRUD.ejs", { dataUser: data });
+};
+
+export {
+  getHomePageController,
+  getCRUDController,
+  postCRUDController,
+  displayGetCRUDController,
+};
