@@ -4,6 +4,7 @@ import {
   getAllUser,
   getUserInfoById,
   updateUserData,
+  deleteUserById,
 } from "../services/CRUDService";
 
 const getHomePageController = async (req, res) => {
@@ -25,7 +26,7 @@ const getCRUDController = async (req, res) => {
 const postCRUDController = async (req, res) => {
   let message = await createNewUser(req.body);
   console.log(message);
-  return res.send("post crud from server");
+  return res.redirect("/get-crud");
 };
 
 const displayGetCRUDController = async (req, res) => {
@@ -50,6 +51,13 @@ const putCRUDController = async (req, res) => {
   return res.redirect("/get-crud");
 };
 
+const deleteCRUDController = async (req, res) => {
+  let userId = req.params.id;
+  if (!userId) return;
+  await deleteUserById(userId);
+  return res.redirect("/get-crud");
+};
+
 export {
   getHomePageController,
   getCRUDController,
@@ -57,4 +65,5 @@ export {
   displayGetCRUDController,
   editCRUDController,
   putCRUDController,
+  deleteCRUDController,
 };

@@ -77,4 +77,23 @@ let updateUserData = async (data) => {
   }
 };
 
-export { createNewUser, getAllUser, getUserInfoById, updateUserData };
+let deleteUserById = async (userId) => {
+  try {
+    console.log("userID", userId);
+    await db.Users.destroy({
+      where: {
+        id: userId,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  createNewUser,
+  getAllUser,
+  getUserInfoById,
+  updateUserData,
+  deleteUserById,
+};

@@ -6,6 +6,7 @@ import {
   displayGetCRUDController,
   editCRUDController,
   putCRUDController,
+  deleteCRUDController,
 } from "../controllers/homeController";
 
 const router = express.Router();
@@ -18,6 +19,7 @@ const initWebRoutes = (app) => {
   router.get("/get-crud", displayGetCRUDController);
   router.get("/edit-crud", editCRUDController);
   router.post("/put-crud", putCRUDController);
+  router.post("/delete-crud/:id", deleteCRUDController);
 
   return app.use("/", router);
 };
