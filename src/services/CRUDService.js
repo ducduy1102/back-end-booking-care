@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import db from "../models";
-import { raw } from "body-parser";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -36,6 +35,7 @@ let hashUserPassword = (password) => {
   });
 };
 
+// 2 ways
 let getAllUser = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -47,4 +47,34 @@ let getAllUser = () => {
   });
 };
 
-export { createNewUser, getAllUser };
+let getUserInfoById = async (userId) => {
+  try {
+    let user = await db.Users.findOne({
+      where: {
+        id: userId,
+      },
+      raw: true,
+    });
+    if (!user) {
+      return {};
+    }
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+let updateUserData = async (data) => {
+  console.log("data from server", data);
+  try {
+    await db.Users.update(data, {
+      where: {
+        id: +data.id,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { createNewUser, getAllUser, getUserInfoById, updateUserData };

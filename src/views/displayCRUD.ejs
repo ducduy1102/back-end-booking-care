@@ -28,6 +28,7 @@
                 <th>Gender</th>
                 <th>Phone Number</th>
                 <th>RoleId</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -41,6 +42,21 @@
                 <td><%= +item.gender === 0 ? "Female" : "Male" %></td>
                 <td><%= item.phoneNumber %></td>
                 <td><%= item.roleId %></td>
+                <td>
+                  <a
+                    class="btn btn-warning"
+                    href="/edit-crud?id=<%= item.id %>"
+                  >
+                    Edit
+                  </a>
+                  <form
+                    style="display: inline"
+                    action="/delete-crud/<%= item.id %>"
+                    method="post"
+                  >
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+                </td>
               </tr>
               <% }) %>
             </tbody>
