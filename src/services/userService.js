@@ -48,7 +48,7 @@ const handleUserLogin = async (email, password) => {
     }
     return {
       errCode: 1,
-      message: "Your email / phone number or password is incorrect!",
+      message: "Your email / password is incorrect!",
       data: "",
     };
   } catch (error) {
