@@ -65,7 +65,7 @@ let getUserInfoById = async (userId) => {
 };
 
 let updateUserData = async (data) => {
-  console.log("data from server", data);
+  // console.log("data from server", data);
   try {
     await db.Users.update(data, {
       where: {
@@ -79,7 +79,7 @@ let updateUserData = async (data) => {
 
 let deleteUserById = async (userId) => {
   try {
-    console.log("userID", userId);
+    // console.log("userID", userId);
     await db.Users.destroy({
       where: {
         id: userId,
