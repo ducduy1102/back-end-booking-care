@@ -1,4 +1,4 @@
-import { handleUserLogin } from "../services/userService";
+import { handleUserLogin, getAllUsers } from "../services/userService";
 
 let handleLogin = async (req, res) => {
   let email = req.body.email;
@@ -21,4 +21,24 @@ let handleLogin = async (req, res) => {
   });
 };
 
-export { handleLogin };
+const handleGetAllUsersController = async (req, res) => {
+  let id = req.body.id; // ALL, SINGLE (id)
+  let users = await getAllUsers(id);
+  // console.log(users);
+
+  if (!id) {
+    return res.status(200).json({
+      errCode: 1,
+      message: "Missing required parameters",
+      users: [],
+    });
+  }
+
+  return res.status(200).json({
+    errCode: 0,
+    message: "Ok",
+    users: users,
+  });
+};
+
+export { handleLogin, handleGetAllUsersController };

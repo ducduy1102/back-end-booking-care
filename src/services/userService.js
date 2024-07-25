@@ -38,7 +38,7 @@ const handleUserLogin = async (email, password) => {
       if (isCorrectPassword) {
         return {
           errCode: 0,
-          message: "ok",
+          message: "Login successfully!",
           user: {
             email: user.email,
             roleId: user.roleId,
@@ -60,4 +60,32 @@ const handleUserLogin = async (email, password) => {
   }
 };
 
-export { handleUserLogin };
+const getAllUsers = async (userId) => {
+  try {
+    let users = "";
+    if (userId === "ALL") {
+      users = await db.Users.findAll({
+        attributes: {
+          exclude: ["password"],
+        },
+      });
+    }
+    if (userId && userId !== "ALL") {
+      users = await db.Users.findOne({
+        where: { id: userId },
+        attributes: {
+          exclude: ["password"],
+        },
+      });
+    }
+    return users;
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Something wrongs in service..",
+      errorCode: -1,
+    };
+  }
+};
+
+export { handleUserLogin, getAllUsers };

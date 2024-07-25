@@ -8,7 +8,10 @@ import {
   putCRUDController,
   deleteCRUDController,
 } from "../controllers/homeController";
-import { handleLogin } from "../controllers/userController";
+import {
+  handleLogin,
+  handleGetAllUsersController,
+} from "../controllers/userController";
 
 const router = express.Router();
 
@@ -24,6 +27,7 @@ const initWebRoutes = (app) => {
 
   // crud on client
   router.post("/api/login", handleLogin);
+  router.get("/api/get-all-users", handleGetAllUsersController);
 
   return app.use("/", router);
 };
