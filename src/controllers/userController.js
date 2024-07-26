@@ -1,6 +1,12 @@
-import { handleUserLogin, getAllUsers } from "../services/userService";
+import {
+  handleUserLogin,
+  getAllUsers,
+  createNewUser,
+  editUser,
+  deleteUser,
+} from "../services/userService";
 
-let handleLogin = async (req, res) => {
+const handleLogin = async (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
 
@@ -22,7 +28,7 @@ let handleLogin = async (req, res) => {
 };
 
 const handleGetAllUsersController = async (req, res) => {
-  let id = req.body.id; // ALL, SINGLE (id)
+  let id = req.query.id; // ALL, SINGLE (id)
   let users = await getAllUsers(id);
   // console.log(users);
 
@@ -41,4 +47,44 @@ const handleGetAllUsersController = async (req, res) => {
   });
 };
 
-export { handleLogin, handleGetAllUsersController };
+const handleCreateNewUserController = async (req, res) => {
+  let data = await createNewUser(req.body);
+  // console.log(data);
+  return res.status(200).json({
+    errCode: data.errCode,
+    message: data.message,
+  });
+};
+
+const handleEditUserController = async (req, res) => {
+  let data = await editUser(req.body);
+
+  return res.status(200).json({
+    errCode: data.errCode,
+    message: data.message,
+  });
+};
+
+const handleDeleteUserController = async (req, res) => {
+  let userId = req.body.id;
+  // console.log("userId", userId);
+  if (!userId) {
+    return res.status(200).json({
+      errCode: 1,
+      message: "Missing required parameters!",
+    });
+  }
+  let data = await deleteUser(userId);
+  return res.status(200).json({
+    errCode: data.errCode,
+    message: data.message,
+  });
+};
+
+export {
+  handleLogin,
+  handleGetAllUsersController,
+  handleCreateNewUserController,
+  handleEditUserController,
+  handleDeleteUserController,
+};

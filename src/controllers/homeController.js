@@ -25,7 +25,7 @@ const getCRUDController = async (req, res) => {
 
 const postCRUDController = async (req, res) => {
   let message = await createNewUser(req.body);
-  console.log(message);
+  // console.log(message);
   return res.redirect("/get-crud");
 };
 

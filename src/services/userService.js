@@ -1,9 +1,10 @@
+import { where } from "sequelize";
 import db from "../models";
 import bcrypt from "bcryptjs";
 
 const salt = bcrypt.genSaltSync(10);
 
-const hashUserPassword = (userPassword) => {
+const hashUserPassword = async (userPassword) => {
   let hashPassword = bcrypt.hashSync(userPassword, salt);
   return hashPassword;
 };
@@ -21,6 +22,10 @@ const checkUserEmail = async (userEmail) => {
     return true;
   } catch (error) {
     console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
   }
 };
 
@@ -54,8 +59,8 @@ const handleUserLogin = async (email, password) => {
   } catch (error) {
     console.log(error);
     return {
-      message: "Something wrongs in service..",
-      errorCode: -1,
+      message: "Something wrongs in service...",
+      errCode: -1,
     };
   }
 };
@@ -82,10 +87,157 @@ const getAllUsers = async (userId) => {
   } catch (error) {
     console.log(error);
     return {
-      message: "Something wrongs in service..",
-      errorCode: -1,
+      errCode: -1,
+      message: "Something wrongs in service...",
     };
   }
 };
 
-export { handleUserLogin, getAllUsers };
+const createNewUser = async (data) => {
+  try {
+    // validate if data null
+    // validateUserData(data);
+    if (data.email === "") {
+      return {
+        errCode: 1,
+        message: "Email is not empty. Please enter your email!",
+      };
+    } else {
+      // check email existed
+      let isEmailExisted = await checkUserEmail(data.email);
+      if (isEmailExisted === true) {
+        return {
+          errCode: 1,
+          message: "Email already exists.",
+        };
+      }
+    }
+    if (data.password === "") {
+      return {
+        errCode: 1,
+        message: "Password is not empty. Please enter your password!",
+      };
+    }
+    if (data.firstName === "") {
+      return {
+        errCode: 1,
+        message: "First name is not empty. Please enter your first name!",
+      };
+    }
+    if (data.lastName === "") {
+      return {
+        errCode: 1,
+        message: "Last name is not empty. Please enter your last name!",
+      };
+    }
+
+    let hashPasswordFromBcrypt = await hashUserPassword(data.password);
+    await db.Users.create({
+      email: data.email,
+      password: hashPasswordFromBcrypt,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      address: data.address,
+      phoneNumber: data.phoneNumber,
+      gender: data.gender === "1" ? true : false,
+      roleId: data.roleId === "" ? 3 : data.roleId,
+    });
+    return {
+      errCode: 0,
+      message: "Create a new user successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+const editUser = async (data) => {
+  try {
+    if (!data.id) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+
+    let user = await db.Users.findOne({
+      where: { id: data.id },
+    });
+    if (!user) {
+      return {
+        errCode: 2,
+        message: "User isn't exist.",
+      };
+    }
+    // if (user.email !== data.email) {
+    //   return {
+    //     errCode: 3,
+    //     message: "Email is not allowed to update!",
+    //   };
+    // }
+
+    // Có bug là update dc email nếu như ko truyền email mặc định
+    await db.Users.update(data, {
+      where: { id: data.id },
+    });
+
+    // await db.Users.update({
+    //   where: { id: data.id },
+    //   password: data.password,
+    //   firstName: data.firstName,
+    //   lastName: data.lastName,
+    //   address: data.address,
+    //   phoneNumber: data.phoneNumber,
+    //   gender: data.gender,
+    //   image: data.image,
+    //   roleId: data.roleId,
+    //   positionId: data.positionId,
+    // });
+
+    return {
+      errCode: 0,
+      message: "Update user successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+const deleteUser = async (userId) => {
+  try {
+    let user = await db.Users.findOne({
+      where: { id: userId },
+    });
+    if (!user) {
+      return {
+        errCode: 2,
+        message: "User isn't exist.",
+      };
+    }
+    await db.Users.destroy({
+      where: {
+        id: userId,
+      },
+    });
+    return {
+      errCode: 0,
+      message: "Delete user successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+export { handleUserLogin, getAllUsers, createNewUser, editUser, deleteUser };
