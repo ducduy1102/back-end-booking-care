@@ -4,6 +4,7 @@ import {
   createNewUser,
   editUser,
   deleteUser,
+  getAllCode,
 } from "../services/userService";
 
 const handleLogin = async (req, res) => {
@@ -81,10 +82,25 @@ const handleDeleteUserController = async (req, res) => {
   });
 };
 
+const handleGetAllCodeController = async (req, res) => {
+  try {
+    const type = req.query.type;
+    let data = await getAllCode(type);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log("Get all code error: ", error);
+    return res.status(200).json({
+      errCode: -1,
+      message: "Something wrongs in service...",
+    });
+  }
+};
+
 export {
   handleLogin,
   handleGetAllUsersController,
   handleCreateNewUserController,
   handleEditUserController,
   handleDeleteUserController,
+  handleGetAllCodeController,
 };

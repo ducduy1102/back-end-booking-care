@@ -240,4 +240,40 @@ const deleteUser = async (userId) => {
   }
 };
 
-export { handleUserLogin, getAllUsers, createNewUser, editUser, deleteUser };
+const getAllCode = async (type) => {
+  try {
+    if (!type) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+        data: {},
+      };
+    }
+
+    let allcode = await db.AllCodes.findAll({
+      where: {
+        type: type,
+      },
+    });
+
+    return {
+      errCode: 0,
+      message: "Get all code successfully!",
+      data: allcode,
+    };
+  } catch (error) {
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+export {
+  handleUserLogin,
+  getAllUsers,
+  createNewUser,
+  editUser,
+  deleteUser,
+  getAllCode,
+};

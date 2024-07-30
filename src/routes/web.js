@@ -14,6 +14,7 @@ import {
   handleCreateNewUserController,
   handleEditUserController,
   handleDeleteUserController,
+  handleGetAllCodeController,
 } from "../controllers/userController";
 
 const router = express.Router();
@@ -34,6 +35,8 @@ const initWebRoutes = (app) => {
   router.post("/api/create-new-user", handleCreateNewUserController);
   router.put("/api/edit-user", handleEditUserController);
   router.delete("/api/delete-user", handleDeleteUserController);
+
+  router.get("/allcode", handleGetAllCodeController);
 
   return app.use("/", router);
 };
