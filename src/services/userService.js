@@ -47,6 +47,8 @@ const handleUserLogin = async (email, password) => {
           user: {
             email: user.email,
             roleId: user.roleId,
+            firstName: user.firstName,
+            lastName: user.lastName,
           },
         };
       }

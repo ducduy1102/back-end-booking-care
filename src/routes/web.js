@@ -36,7 +36,7 @@ const initWebRoutes = (app) => {
   router.put("/api/edit-user", handleEditUserController);
   router.delete("/api/delete-user", handleDeleteUserController);
 
-  router.get("/allcode", handleGetAllCodeController);
+  router.get("/api/allcode", handleGetAllCodeController);
 
   return app.use("/", router);
 };
