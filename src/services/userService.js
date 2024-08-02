@@ -141,8 +141,9 @@ const createNewUser = async (data) => {
       lastName: data.lastName,
       address: data.address,
       phoneNumber: data.phoneNumber,
-      gender: data.gender === "1" ? true : false,
-      roleId: data.roleId === "" ? 3 : data.roleId,
+      gender: data.gender,
+      roleId: data.roleId,
+      positionId: data.positionId,
     });
     return {
       errCode: 0,

@@ -84,6 +84,11 @@ const handleDeleteUserController = async (req, res) => {
 
 const handleGetAllCodeController = async (req, res) => {
   try {
+    // setTimeout(async () => {
+    //   const type = req.query.type;
+    //   let data = await getAllCode(type);
+    //   return res.status(200).json(data);
+    // }, 2000);
     const type = req.query.type;
     let data = await getAllCode(type);
     return res.status(200).json(data);
