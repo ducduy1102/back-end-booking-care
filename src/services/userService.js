@@ -144,6 +144,7 @@ const createNewUser = async (data) => {
       gender: data.gender,
       roleId: data.roleId,
       positionId: data.positionId,
+      image: data.avatar,
     });
     return {
       errCode: 0,
@@ -160,7 +161,7 @@ const createNewUser = async (data) => {
 
 const editUser = async (data) => {
   try {
-    if (!data.id) {
+    if (!data.id || !data.roleId || !data.positionId || !data.gender) {
       return {
         errCode: 1,
         message: "Missing required parameters!",
@@ -184,22 +185,42 @@ const editUser = async (data) => {
     // }
 
     // Có bug là update dc email nếu như ko truyền email mặc định
-    await db.Users.update(data, {
-      where: { id: data.id },
-    });
-
-    // await db.Users.update({
+    // await db.Users.update(data, {
     //   where: { id: data.id },
-    //   password: data.password,
-    //   firstName: data.firstName,
-    //   lastName: data.lastName,
-    //   address: data.address,
-    //   phoneNumber: data.phoneNumber,
-    //   gender: data.gender,
-    //   image: data.image,
-    //   roleId: data.roleId,
-    //   positionId: data.positionId,
     // });
+
+    if (data.avatar) {
+      await db.Users.update(
+        {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          address: data.address,
+          phoneNumber: data.phoneNumber,
+          gender: data.gender,
+          roleId: data.roleId,
+          positionId: data.positionId,
+          image: data.avatar,
+        },
+        {
+          where: { id: data.id },
+        }
+      );
+    } else {
+      await db.Users.update(
+        {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          address: data.address,
+          phoneNumber: data.phoneNumber,
+          gender: data.gender,
+          roleId: data.roleId,
+          positionId: data.positionId,
+        },
+        {
+          where: { id: data.id },
+        }
+      );
+    }
 
     return {
       errCode: 0,
