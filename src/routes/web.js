@@ -16,6 +16,7 @@ import {
   handleDeleteUserController,
   handleGetAllCodeController,
 } from "../controllers/userController";
+import { getTopDoctorHomeController } from "../controllers/doctorController";
 
 const router = express.Router();
 
@@ -37,6 +38,8 @@ const initWebRoutes = (app) => {
   router.delete("/api/delete-user", handleDeleteUserController);
 
   router.get("/api/allcode", handleGetAllCodeController);
+
+  router.get("/api/top-doctor-home", getTopDoctorHomeController);
 
   return app.use("/", router);
 };
