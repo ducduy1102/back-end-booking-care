@@ -16,7 +16,11 @@ import {
   handleDeleteUserController,
   handleGetAllCodeController,
 } from "../controllers/userController";
-import { getTopDoctorHomeController } from "../controllers/doctorController";
+import {
+  getTopDoctorHomeController,
+  getAllDoctorsController,
+  postInforDoctorController,
+} from "../controllers/doctorController";
 
 const router = express.Router();
 
@@ -39,7 +43,10 @@ const initWebRoutes = (app) => {
 
   router.get("/api/allcode", handleGetAllCodeController);
 
+  // doctor
   router.get("/api/top-doctor-home", getTopDoctorHomeController);
+  router.get("/api/get-all-doctors", getAllDoctorsController);
+  router.post("/api/save-infor-doctor", postInforDoctorController);
 
   return app.use("/", router);
 };

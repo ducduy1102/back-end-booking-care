@@ -36,4 +36,54 @@ let getTopDoctorHome = async (limitInput) => {
   }
 };
 
-export { getTopDoctorHome };
+let getAllDoctors = async () => {
+  try {
+    let doctors = await db.Users.findAll({
+      where: {
+        roleId: "R2",
+      },
+      attributes: {
+        exclude: ["password", "image"],
+      },
+    });
+
+    return {
+      errCode: 0,
+      message: "Get all doctor successfully!",
+      data: doctors,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const saveDetailInforDoctor = async (inputData) => {
+  try {
+    if (
+      !inputData.doctorId ||
+      !inputData.contentHTML ||
+      !inputData.contentMarkdown
+    ) {
+      return {
+        errCode: 1,
+        message: "Missing parameters...",
+      };
+    }
+
+    await db.Markdowns.create({
+      contentHTML: inputData.contentHTML,
+      contentMarkdown: inputData.contentMarkdown,
+      description: inputData.description,
+      doctorId: inputData.doctorId,
+    });
+
+    return {
+      errCode: 0,
+      message: "Save information doctor successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getTopDoctorHome, getAllDoctors, saveDetailInforDoctor };
