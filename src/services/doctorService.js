@@ -100,7 +100,7 @@ let getDetailDoctorById = async (inputId) => {
         id: inputId,
       },
       attributes: {
-        exclude: ["password", "image"],
+        exclude: ["password"],
       },
       include: [
         {
@@ -114,8 +114,17 @@ let getDetailDoctorById = async (inputId) => {
         },
       ],
       nest: true,
-      raw: true,
+      raw: false,
     });
+
+    if (!data) {
+      data = {};
+    }
+
+    // convert buffer -> base64
+    if (data && data.image) {
+      data.image = new Buffer(data.image, "base64").toString("binary");
+    }
 
     return {
       errCode: 0,
