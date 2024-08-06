@@ -57,7 +57,7 @@ let getAllDoctors = async () => {
   }
 };
 
-const saveDetailInforDoctor = async (inputData) => {
+let saveDetailInforDoctor = async (inputData) => {
   try {
     if (
       !inputData.doctorId ||
@@ -66,7 +66,7 @@ const saveDetailInforDoctor = async (inputData) => {
     ) {
       return {
         errCode: 1,
-        message: "Missing parameters...",
+        message: "Missing required parameters...",
       };
     }
 
@@ -86,4 +86,50 @@ const saveDetailInforDoctor = async (inputData) => {
   }
 };
 
-export { getTopDoctorHome, getAllDoctors, saveDetailInforDoctor };
+let getDetailDoctorById = async (inputId) => {
+  try {
+    if (!inputId) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters...",
+      };
+    }
+
+    let data = await db.Users.findOne({
+      where: {
+        id: inputId,
+      },
+      attributes: {
+        exclude: ["password", "image"],
+      },
+      include: [
+        {
+          model: db.Markdowns,
+          attributes: ["id", "contentHTML", "contentMarkdown", "description"],
+        },
+        {
+          model: db.AllCodes,
+          as: "positionData",
+          attributes: ["valueEn", "valueVi"],
+        },
+      ],
+      nest: true,
+      raw: true,
+    });
+
+    return {
+      errCode: 0,
+      message: "Get infor doctor successfully!",
+      data: data,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  getTopDoctorHome,
+  getAllDoctors,
+  saveDetailInforDoctor,
+  getDetailDoctorById,
+};

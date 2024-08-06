@@ -20,6 +20,7 @@ import {
   getTopDoctorHomeController,
   getAllDoctorsController,
   postInforDoctorController,
+  getDetailDoctorByIdController,
 } from "../controllers/doctorController";
 
 const router = express.Router();
@@ -47,6 +48,7 @@ const initWebRoutes = (app) => {
   router.get("/api/top-doctor-home", getTopDoctorHomeController);
   router.get("/api/get-all-doctors", getAllDoctorsController);
   router.post("/api/save-infor-doctor", postInforDoctorController);
+  router.get("/api/get-detail-doctor-by-id", getDetailDoctorByIdController);
 
   return app.use("/", router);
 };

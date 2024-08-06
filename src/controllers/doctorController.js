@@ -2,6 +2,7 @@ import {
   getTopDoctorHome,
   getAllDoctors,
   saveDetailInforDoctor,
+  getDetailDoctorById,
 } from "../services/doctorService";
 
 const getTopDoctorHomeController = async (req, res) => {
@@ -46,8 +47,23 @@ const postInforDoctorController = async (req, res) => {
   }
 };
 
+const getDetailDoctorByIdController = async (req, res) => {
+  try {
+    let doctorId = req.query.id;
+    let inforDoctor = await getDetailDoctorById(doctorId);
+    return res.status(200).json(inforDoctor);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      message: "Something wrongs in server...",
+    });
+  }
+};
+
 export {
   getTopDoctorHomeController,
   getAllDoctorsController,
   postInforDoctorController,
+  getDetailDoctorByIdController,
 };
