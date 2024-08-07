@@ -62,7 +62,8 @@ let saveDetailInforDoctor = async (inputData) => {
     if (
       !inputData.doctorId ||
       !inputData.contentHTML ||
-      !inputData.contentMarkdown
+      !inputData.contentMarkdown ||
+      !inputData.action
     ) {
       return {
         errCode: 1,
@@ -70,12 +71,35 @@ let saveDetailInforDoctor = async (inputData) => {
       };
     }
 
-    await db.Markdowns.create({
-      contentHTML: inputData.contentHTML,
-      contentMarkdown: inputData.contentMarkdown,
-      description: inputData.description,
-      doctorId: inputData.doctorId,
-    });
+    if (inputData.action === "CREATE") {
+      await db.Markdowns.create({
+        contentHTML: inputData.contentHTML,
+        contentMarkdown: inputData.contentMarkdown,
+        description: inputData.description,
+        doctorId: inputData.doctorId,
+      });
+    }
+
+    if (inputData.action === "EDIT") {
+      let doctorMarkdown = await db.Markdowns.findOne({
+        where: {
+          doctorId: inputData.doctorId,
+        },
+      });
+
+      if (doctorMarkdown) {
+        await db.Markdowns.update(
+          {
+            contentHTML: inputData.contentHTML,
+            contentMarkdown: inputData.contentMarkdown,
+            description: inputData.description,
+          },
+          {
+            where: { doctorId: inputData.doctorId },
+          }
+        );
+      }
+    }
 
     return {
       errCode: 0,
