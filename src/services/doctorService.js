@@ -212,10 +212,39 @@ let bulkCreateSchedule = async (data) => {
   }
 };
 
+let getScheduleByDate = async (doctorId, date) => {
+  try {
+    if (!doctorId || !date) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+
+    let data = await db.Schedules.findAll({
+      where: {
+        doctorId: doctorId,
+        date: date,
+      },
+    });
+
+    if (!data) data = [];
+
+    return {
+      errCode: 0,
+      message: "Get schedule by date successfully!",
+      data: data,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   getTopDoctorHome,
   getAllDoctors,
   saveDetailInforDoctor,
   getDetailDoctorById,
   bulkCreateSchedule,
+  getScheduleByDate,
 };

@@ -4,6 +4,7 @@ import {
   saveDetailInforDoctor,
   getDetailDoctorById,
   bulkCreateSchedule,
+  getScheduleByDate,
 } from "../services/doctorService";
 
 const getTopDoctorHomeController = async (req, res) => {
@@ -75,10 +76,26 @@ const bulkCreateScheduleController = async (req, res) => {
   }
 };
 
+const getScheduleByDateController = async (req, res) => {
+  try {
+    const doctorId = req.query.doctorId;
+    const date = req.query.date;
+    let infor = await getScheduleByDate(doctorId, date);
+    return res.status(200).json(infor);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      message: "Something wrongs in server...",
+    });
+  }
+};
+
 export {
   getTopDoctorHomeController,
   getAllDoctorsController,
   postInforDoctorController,
   getDetailDoctorByIdController,
   bulkCreateScheduleController,
+  getScheduleByDateController,
 };
