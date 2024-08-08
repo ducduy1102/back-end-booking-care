@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Schedules.belongsTo(models.AllCodes, {
+        foreignKey: "timeType",
+        targetKey: "keyMap",
+        as: "timeTypeData",
+      });
     }
   }
   Schedules.init(
