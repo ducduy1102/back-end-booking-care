@@ -1,5 +1,7 @@
 import db from "../models";
+import _ from "lodash";
 
+const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 let getTopDoctorHome = async (limitInput) => {
   try {
     let users = await db.Users.findAll({
@@ -160,9 +162,60 @@ let getDetailDoctorById = async (inputId) => {
   }
 };
 
+let bulkCreateSchedule = async (data) => {
+  try {
+    if (!data.arrSchedule || !data.doctorId || !data.formattedDate) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+
+    let schedule = data.arrSchedule;
+    if (schedule && schedule.length > 0) {
+      schedule = schedule.map((item) => {
+        item.maxNumber = MAX_NUMBER_SCHEDULE;
+        return item;
+      });
+    }
+
+    // get all existing data
+    let existing = await db.Schedules.findAll({
+      where: { doctorId: data.doctorId, date: data.formattedDate },
+      attributes: ["timeType", "date", "doctorId", "maxNumber"],
+    });
+
+    // convert date
+    if (existing && existing.length > 0) {
+      existing = existing.map((item) => {
+        item.date = new Date(item.date).getTime();
+        return item;
+      });
+    }
+
+    // compare different
+    let toCreate = _.differenceWith(schedule, existing, (a, b) => {
+      return a.timeType === b.timeType && a.date === b.date;
+    });
+
+    // create data
+    if (toCreate && toCreate.length > 0) {
+      await db.Schedules.bulkCreate(toCreate);
+    }
+
+    return {
+      errCode: 0,
+      message: "Create bulk schedule successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   getTopDoctorHome,
   getAllDoctors,
   saveDetailInforDoctor,
   getDetailDoctorById,
+  bulkCreateSchedule,
 };
