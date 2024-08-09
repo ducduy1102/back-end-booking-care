@@ -65,7 +65,12 @@ let saveDetailInforDoctor = async (inputData) => {
       !inputData.doctorId ||
       !inputData.contentHTML ||
       !inputData.contentMarkdown ||
-      !inputData.action
+      !inputData.action ||
+      !inputData.priceId ||
+      !inputData.paymentId ||
+      !inputData.provinceId ||
+      !inputData.nameClinic ||
+      !inputData.addressClinic
     ) {
       return {
         errCode: 1,
@@ -73,6 +78,7 @@ let saveDetailInforDoctor = async (inputData) => {
       };
     }
 
+    // upsert to Markdowns table
     if (inputData.action === "CREATE") {
       await db.Markdowns.create({
         contentHTML: inputData.contentHTML,
@@ -101,6 +107,38 @@ let saveDetailInforDoctor = async (inputData) => {
           }
         );
       }
+    }
+
+    // upsert to Doctor_Infor table
+    let doctorInfor = await db.Doctor_Infor.findOne({
+      where: { doctorId: inputData.doctorId },
+    });
+    if (doctorInfor) {
+      // update
+      await db.Doctor_Infor.update(
+        {
+          priceId: inputData.priceId,
+          paymentId: inputData.paymentId,
+          provinceId: inputData.provinceId,
+          nameClinic: inputData.nameClinic,
+          addressClinic: inputData.addressClinic,
+          note: inputData.note,
+        },
+        {
+          where: { doctorId: inputData.doctorId },
+        }
+      );
+    } else {
+      // create
+      await db.Doctor_Infor.create({
+        doctorId: inputData.doctorId,
+        priceId: inputData.priceId,
+        paymentId: inputData.paymentId,
+        provinceId: inputData.provinceId,
+        nameClinic: inputData.nameClinic,
+        addressClinic: inputData.addressClinic,
+        note: inputData.note,
+      });
     }
 
     return {
