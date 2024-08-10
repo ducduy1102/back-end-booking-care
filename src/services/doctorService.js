@@ -176,6 +176,29 @@ let getDetailDoctorById = async (inputId) => {
           as: "positionData",
           attributes: ["valueEn", "valueVi"],
         },
+        {
+          model: db.Doctor_Infor,
+          attributes: {
+            exclude: ["id", "doctorId", "createdAt", "updatedAt"],
+          },
+          include: [
+            {
+              model: db.AllCodes,
+              as: "priceTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.AllCodes,
+              as: "paymentTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.AllCodes,
+              as: "provinceTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+          ],
+        },
       ],
       nest: true,
       raw: false,
