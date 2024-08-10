@@ -23,6 +23,7 @@ import {
   getDetailDoctorByIdController,
   bulkCreateScheduleController,
   getScheduleByDateController,
+  getExtraInforDoctorByIdController,
 } from "../controllers/doctorController";
 
 const router = express.Router();
@@ -53,6 +54,10 @@ const initWebRoutes = (app) => {
   router.get("/api/get-detail-doctor-by-id", getDetailDoctorByIdController);
   router.post("/api/bulk-create-schedule", bulkCreateScheduleController);
   router.get("/api/get-schedule-doctor-by-date", getScheduleByDateController);
+  router.get(
+    "/api/get-extra-infor-doctor-by-id",
+    getExtraInforDoctorByIdController
+  );
 
   return app.use("/", router);
 };

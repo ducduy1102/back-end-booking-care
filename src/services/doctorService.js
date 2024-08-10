@@ -302,6 +302,54 @@ let getScheduleByDate = async (doctorId, date) => {
   }
 };
 
+let getExtraInforDoctorById = async (doctorId) => {
+  try {
+    if (!doctorId) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+
+    let data = await db.Doctor_Infor.findOne({
+      where: {
+        doctorId: doctorId,
+      },
+      attributes: {
+        exclude: ["id", "doctorId"],
+      },
+      include: [
+        {
+          model: db.AllCodes,
+          as: "priceTypeData",
+          attributes: ["valueEn", "valueVi"],
+        },
+        {
+          model: db.AllCodes,
+          as: "paymentTypeData",
+          attributes: ["valueEn", "valueVi"],
+        },
+        {
+          model: db.AllCodes,
+          as: "provinceTypeData",
+          attributes: ["valueEn", "valueVi"],
+        },
+      ],
+      raw: true,
+      nest: true,
+    });
+
+    if (!data) data = {};
+    return {
+      errCode: 0,
+      message: "Get extra doctor by id successfully!",
+      data: data,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   getTopDoctorHome,
   getAllDoctors,
@@ -309,4 +357,5 @@ export {
   getDetailDoctorById,
   bulkCreateSchedule,
   getScheduleByDate,
+  getExtraInforDoctorById,
 };
