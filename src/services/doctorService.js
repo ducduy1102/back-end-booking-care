@@ -350,6 +350,83 @@ let getExtraInforDoctorById = async (doctorId) => {
   }
 };
 
+let getProfileDoctorById = async (doctorId) => {
+  try {
+    if (!doctorId) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+    let data = await db.Users.findOne({
+      where: {
+        id: doctorId,
+      },
+      attributes: {
+        exclude: ["password"],
+      },
+      include: [
+        {
+          model: db.Markdowns,
+          attributes: ["contentHTML", "contentMarkdown", "description"],
+        },
+        {
+          model: db.AllCodes,
+          as: "positionData",
+          attributes: ["valueEn", "valueVi"],
+        },
+        {
+          model: db.Doctor_Infor,
+          attributes: {
+            exclude: ["id", "doctorId", "createdAt", "updatedAt"],
+          },
+          include: [
+            {
+              model: db.AllCodes,
+              as: "priceTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.AllCodes,
+              as: "paymentTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+            {
+              model: db.AllCodes,
+              as: "provinceTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+          ],
+        },
+      ],
+      nest: true,
+      raw: false,
+    });
+
+    if (!data) {
+      data = {};
+    }
+
+    // convert buffer -> base64
+    if (data && data.image) {
+      data.image = new Buffer(data.image, "base64").toString("binary");
+    }
+
+    return {
+      errCode: 0,
+      message: "Get infor doctor successfully!",
+      data: data,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: 0,
+      message: "Get extra doctor by id successfully!",
+      data: data,
+    };
+  }
+};
+
 export {
   getTopDoctorHome,
   getAllDoctors,
@@ -358,4 +435,5 @@ export {
   bulkCreateSchedule,
   getScheduleByDate,
   getExtraInforDoctorById,
+  getProfileDoctorById,
 };

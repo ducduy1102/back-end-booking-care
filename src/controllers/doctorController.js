@@ -6,6 +6,7 @@ import {
   bulkCreateSchedule,
   getScheduleByDate,
   getExtraInforDoctorById,
+  getProfileDoctorById,
 } from "../services/doctorService";
 
 const getTopDoctorHomeController = async (req, res) => {
@@ -105,6 +106,19 @@ const getExtraInforDoctorByIdController = async (req, res) => {
   }
 };
 
+const getProfileDoctorByIdController = async (req, res) => {
+  try {
+    const doctorId = req.query.doctorId;
+    let infor = await getProfileDoctorById(doctorId);
+    return res.status(200).json(infor);
+  } catch (error) {
+    return res.status(200).json({
+      errCode: -1,
+      message: "Something wrongs in server...",
+    });
+  }
+};
+
 export {
   getTopDoctorHomeController,
   getAllDoctorsController,
@@ -113,4 +127,5 @@ export {
   bulkCreateScheduleController,
   getScheduleByDateController,
   getExtraInforDoctorByIdController,
+  getProfileDoctorByIdController,
 };
