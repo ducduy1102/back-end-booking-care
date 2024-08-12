@@ -26,6 +26,7 @@ import {
   getExtraInforDoctorByIdController,
   getProfileDoctorByIdController,
 } from "../controllers/doctorController";
+import { postBookAppointmentController } from "../controllers/patientController";
 
 const router = express.Router();
 
@@ -60,6 +61,9 @@ const initWebRoutes = (app) => {
     getExtraInforDoctorByIdController
   );
   router.get("/api/get-profile-doctor-by-id", getProfileDoctorByIdController);
+
+  // patient
+  router.post("/api/patient-book-appointment", postBookAppointmentController);
 
   return app.use("/", router);
 };
