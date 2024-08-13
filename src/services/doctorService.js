@@ -285,6 +285,11 @@ let getScheduleByDate = async (doctorId, date) => {
           as: "timeTypeData",
           attributes: ["valueEn", "valueVi"],
         },
+        {
+          model: db.Users,
+          as: "doctorData",
+          attributes: ["firstName", "lastName"],
+        },
       ],
       raw: true,
       nest: true,

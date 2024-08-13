@@ -4,7 +4,13 @@ import { sendSimpleEmail } from "./emailService";
 
 let postBookAppointment = async (data) => {
   try {
-    if (!data.email || !data.doctorId || !data.timeType || !data.date) {
+    if (
+      !data.email ||
+      !data.doctorId ||
+      !data.timeType ||
+      !data.date ||
+      !data.fullname
+    ) {
       return {
         errCode: 1,
         message: "Missing required parameters!",
@@ -12,11 +18,14 @@ let postBookAppointment = async (data) => {
     }
     await sendSimpleEmail({
       receiverEmail: data.email,
-      patientName: "Nguyễn Đức",
-      time: "8:00 - 9:00 Thứ tư 14/8/2024",
-      doctorName: "Evil Shadow",
+      patientName: data.fullname,
+      time: data.timeString,
+      doctorName: data.doctorName,
+      language: data.language,
       redirectLink: "https://github.com/ducduy1102",
     });
+
+    // upsert patient
     let user = await db.Users.findOrCreate({
       where: { email: data.email },
       defaults: {
