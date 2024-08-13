@@ -1,5 +1,6 @@
 import db from "../models";
 require("dotenv").config();
+import { sendSimpleEmail } from "./emailService";
 
 let postBookAppointment = async (data) => {
   try {
@@ -9,6 +10,13 @@ let postBookAppointment = async (data) => {
         message: "Missing required parameters!",
       };
     }
+    await sendSimpleEmail({
+      receiverEmail: data.email,
+      patientName: "Nguyễn Đức",
+      time: "8:00 - 9:00 Thứ tư 14/8/2024",
+      doctorName: "Evil Shadow",
+      redirectLink: "https://github.com/ducduy1102",
+    });
     let user = await db.Users.findOrCreate({
       where: { email: data.email },
       defaults: {
@@ -33,7 +41,7 @@ let postBookAppointment = async (data) => {
 
     return {
       errCode: 0,
-      message: "Schedule appointment successfully!",
+      message: "Appointment booking successfully!",
     };
   } catch (error) {
     console.log(error);
