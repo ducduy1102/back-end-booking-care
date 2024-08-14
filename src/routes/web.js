@@ -31,6 +31,8 @@ import {
   postVerifyBookAppointmentController,
 } from "../controllers/patientController";
 
+import { createNewSpecialtyController } from "../controllers/specialtyController";
+
 const router = express.Router();
 
 const initWebRoutes = (app) => {
@@ -71,6 +73,9 @@ const initWebRoutes = (app) => {
     "/api/verify-book-appointment",
     postVerifyBookAppointmentController
   );
+
+  // specialty
+  router.post("/api/create-new-specialty", createNewSpecialtyController);
 
   return app.use("/", router);
 };
