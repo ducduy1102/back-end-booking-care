@@ -1,6 +1,12 @@
 import db from "../models";
 require("dotenv").config();
 import { sendSimpleEmail } from "./emailService";
+import { v4 as uuidv4 } from "uuid";
+
+let buildUrlEmail = (doctorId, token) => {
+  let result = `${process.env.REACT_URL2}/verify-booking?token=${token}&doctorId=${doctorId}`;
+  return result;
+};
 
 let postBookAppointment = async (data) => {
   try {
@@ -16,13 +22,15 @@ let postBookAppointment = async (data) => {
         message: "Missing required parameters!",
       };
     }
+    let token = uuidv4();
+
     await sendSimpleEmail({
       receiverEmail: data.email,
       patientName: data.fullname,
       time: data.timeString,
       doctorName: data.doctorName,
       language: data.language,
-      redirectLink: "https://github.com/ducduy1102",
+      redirectLink: buildUrlEmail(data.doctorId, token),
     });
 
     // upsert patient
@@ -44,6 +52,7 @@ let postBookAppointment = async (data) => {
           patientId: user[0].id,
           date: data.date,
           timeType: data.timeType,
+          token: token,
         },
       });
     }
@@ -61,4 +70,53 @@ let postBookAppointment = async (data) => {
   }
 };
 
-export { postBookAppointment };
+let postVerifyBookAppointment = async (data) => {
+  try {
+    if (!data.doctorId || !data.token) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+    let appointment = await db.Bookings.findOne({
+      where: {
+        doctorId: data.doctorId,
+        token: data.token,
+        statusId: "S1",
+      },
+    });
+
+    if (!appointment) {
+      return {
+        errCode: 2,
+        message: "Appointment has been activated or does not exist!",
+      };
+    }
+
+    await db.Bookings.update(
+      {
+        statusId: "S2",
+      },
+      {
+        where: {
+          doctorId: data.doctorId,
+          token: data.token,
+          statusId: "S1",
+        },
+      }
+    );
+
+    return {
+      errCode: 0,
+      message: "Update the appointment successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+export { postBookAppointment, postVerifyBookAppointment };
