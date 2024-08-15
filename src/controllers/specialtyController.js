@@ -1,4 +1,7 @@
-import { createNewSpecialty } from "../services/specialtyService";
+import {
+  createNewSpecialty,
+  getAllSpecialty,
+} from "../services/specialtyService";
 
 const createNewSpecialtyController = async (req, res) => {
   try {
@@ -13,4 +16,17 @@ const createNewSpecialtyController = async (req, res) => {
   }
 };
 
-export { createNewSpecialtyController };
+const getAllSpecialtyController = async (req, res) => {
+  try {
+    let data = await getAllSpecialty();
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      message: "Something wrongs in service...",
+    });
+  }
+};
+
+export { createNewSpecialtyController, getAllSpecialtyController };

@@ -31,7 +31,10 @@ import {
   postVerifyBookAppointmentController,
 } from "../controllers/patientController";
 
-import { createNewSpecialtyController } from "../controllers/specialtyController";
+import {
+  createNewSpecialtyController,
+  getAllSpecialtyController,
+} from "../controllers/specialtyController";
 
 const router = express.Router();
 
@@ -76,6 +79,7 @@ const initWebRoutes = (app) => {
 
   // specialty
   router.post("/api/create-new-specialty", createNewSpecialtyController);
+  router.get("/api/get-specialty", getAllSpecialtyController);
 
   return app.use("/", router);
 };
