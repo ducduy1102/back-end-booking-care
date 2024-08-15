@@ -1,6 +1,7 @@
 import {
   createNewSpecialty,
   getAllSpecialty,
+  getDetailSpecialtyById,
 } from "../services/specialtyService";
 
 const createNewSpecialtyController = async (req, res) => {
@@ -29,4 +30,23 @@ const getAllSpecialtyController = async (req, res) => {
   }
 };
 
-export { createNewSpecialtyController, getAllSpecialtyController };
+const getDetailSpecialtyByIdController = async (req, res) => {
+  try {
+    let specialtyId = req.query.id;
+    let location = req.query.location;
+    let infor = await getDetailSpecialtyById(specialtyId, location);
+    return res.status(200).json(infor);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      message: "Something wrongs in service...",
+    });
+  }
+};
+
+export {
+  createNewSpecialtyController,
+  getAllSpecialtyController,
+  getDetailSpecialtyByIdController,
+};

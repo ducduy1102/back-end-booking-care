@@ -65,4 +65,58 @@ let getAllSpecialty = async () => {
   }
 };
 
-export { createNewSpecialty, getAllSpecialty };
+let getDetailSpecialtyById = async (specialtyId, location) => {
+  try {
+    if (!specialtyId || !location) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+
+    let data = await db.Specialties.findOne({
+      where: {
+        id: specialtyId,
+      },
+      attributes: ["descriptionHTML", "descriptionMarkdown"],
+    });
+
+    if (data) {
+      let doctorSpecialty = [];
+      if (location === "ALL") {
+        doctorSpecialty = await db.Doctor_Infor.findAll({
+          where: {
+            specialtyId: specialtyId,
+          },
+          attributes: ["doctorId", "provinceId"],
+        });
+      } else {
+        // find by specific location
+        doctorSpecialty = await db.Doctor_Infor.findAll({
+          where: {
+            specialtyId: specialtyId,
+            provinceId: location,
+          },
+          attributes: ["doctorId", "provinceId"],
+        });
+      }
+      data.doctorSpecialty = doctorSpecialty;
+    } else {
+      data = {};
+    }
+
+    return {
+      errCode: 0,
+      message: "Get specialty successfully!",
+      data: data,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+export { createNewSpecialty, getAllSpecialty, getDetailSpecialtyById };

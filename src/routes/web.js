@@ -34,6 +34,7 @@ import {
 import {
   createNewSpecialtyController,
   getAllSpecialtyController,
+  getDetailSpecialtyByIdController,
 } from "../controllers/specialtyController";
 
 const router = express.Router();
@@ -80,6 +81,10 @@ const initWebRoutes = (app) => {
   // specialty
   router.post("/api/create-new-specialty", createNewSpecialtyController);
   router.get("/api/get-specialty", getAllSpecialtyController);
+  router.get(
+    "/api/get-detail-specialty-by-id",
+    getDetailSpecialtyByIdController
+  );
 
   return app.use("/", router);
 };
