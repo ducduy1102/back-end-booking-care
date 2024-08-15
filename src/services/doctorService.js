@@ -59,22 +59,44 @@ let getAllDoctors = async () => {
   }
 };
 
+let checkRequiredFields = (inputData) => {
+  let arrFields = [
+    "doctorId",
+    "contentHTML",
+    "contentMarkdown",
+    "action",
+    "priceId",
+    "paymentId",
+    "provinceId",
+    "nameClinic",
+    "addressClinic",
+    "note",
+    "specialtyId",
+  ];
+
+  let isValid = true;
+  let element = "";
+
+  for (let i = 0; i < arrFields.length; i++) {
+    if (!inputData[arrFields[i]]) {
+      isValid = false;
+      element = arrFields[i];
+      break;
+    }
+  }
+  return {
+    isValid,
+    element,
+  };
+};
+
 let saveDetailInforDoctor = async (inputData) => {
   try {
-    if (
-      !inputData.doctorId ||
-      !inputData.contentHTML ||
-      !inputData.contentMarkdown ||
-      !inputData.action ||
-      !inputData.priceId ||
-      !inputData.paymentId ||
-      !inputData.provinceId ||
-      !inputData.nameClinic ||
-      !inputData.addressClinic
-    ) {
+    let checkObj = checkRequiredFields(inputData);
+    if (checkObj.isValid === false) {
       return {
         errCode: 1,
-        message: "Missing required parameters...",
+        message: `Missing parameters ${checkObj.element} `,
       };
     }
 
@@ -123,6 +145,8 @@ let saveDetailInforDoctor = async (inputData) => {
           nameClinic: inputData.nameClinic,
           addressClinic: inputData.addressClinic,
           note: inputData.note,
+          specialtyId: inputData.specialtyId,
+          clinicId: inputData.clinicId,
         },
         {
           where: { doctorId: inputData.doctorId },
@@ -138,6 +162,8 @@ let saveDetailInforDoctor = async (inputData) => {
         nameClinic: inputData.nameClinic,
         addressClinic: inputData.addressClinic,
         note: inputData.note,
+        specialtyId: inputData.specialtyId,
+        clinicId: inputData.clinicId,
       });
     }
 
