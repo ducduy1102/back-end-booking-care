@@ -36,7 +36,11 @@ import {
   getAllSpecialtyController,
   getDetailSpecialtyByIdController,
 } from "../controllers/specialtyController";
-import { createNewClinicController } from "../controllers/clinicController";
+import {
+  createNewClinicController,
+  getAllClinicController,
+  getDetailClinicByIdController,
+} from "../controllers/clinicController";
 
 const router = express.Router();
 
@@ -89,11 +93,8 @@ const initWebRoutes = (app) => {
 
   // clinic
   router.post("/api/create-new-clinic", createNewClinicController);
-  // router.get("/api/get-clinic", getAllClinicController);
-  // router.get(
-  //   "/api/get-detail-clinic-by-id",
-  //   getDetailClinicByIdController
-  // );
+  router.get("/api/get-clinic", getAllClinicController);
+  router.get("/api/get-detail-clinic-by-id", getDetailClinicByIdController);
 
   return app.use("/", router);
 };
