@@ -8,6 +8,7 @@ import {
   getExtraInforDoctorById,
   getProfileDoctorById,
   getListPatientForDoctor,
+  sendRemedy,
 } from "../services/doctorService";
 
 const getTopDoctorHomeController = async (req, res) => {
@@ -135,6 +136,19 @@ const getListPatientForDoctorController = async (req, res) => {
   }
 };
 
+const sendRemedyController = async (req, res) => {
+  try {
+    let infor = await sendRemedy(req.body);
+    return res.status(200).json(infor);
+  } catch (error) {
+    console.log(error);
+    res.status(200).json({
+      errCode: -1,
+      message: "Something wrongs in server...",
+    });
+  }
+};
+
 export {
   getTopDoctorHomeController,
   getAllDoctorsController,
@@ -145,4 +159,5 @@ export {
   getExtraInforDoctorByIdController,
   getProfileDoctorByIdController,
   getListPatientForDoctorController,
+  sendRemedyController,
 };

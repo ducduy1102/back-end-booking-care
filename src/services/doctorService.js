@@ -1,5 +1,6 @@
 import db from "../models";
 import _ from "lodash";
+import { sendAttachment } from "./emailService";
 
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 let getTopDoctorHome = async (limitInput) => {
@@ -543,6 +544,46 @@ let getListPatientForDoctor = async (doctorId, date) => {
   }
 };
 
+let sendRemedy = async (data) => {
+  try {
+    if (!data.email || !data.doctorId || !data.patientId || !data.timeType) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+
+    // update patient status
+    let appointment = await db.Bookings.findOne({
+      where: {
+        doctorId: data.doctorId,
+        patientId: data.patientId,
+        timeType: data.timeType,
+        statusId: "S2",
+      },
+      raw: false,
+    });
+    if (appointment) {
+      appointment.statusId = "S3";
+      await appointment.save();
+      await sendAttachment(data);
+    }
+
+    // send email remedy
+
+    return {
+      errCode: 0,
+      message: "Send remedy successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
 export {
   getTopDoctorHome,
   getAllDoctors,
@@ -553,4 +594,5 @@ export {
   getExtraInforDoctorById,
   getProfileDoctorById,
   getListPatientForDoctor,
+  sendRemedy,
 };

@@ -15,7 +15,7 @@ let sendSimpleEmail = async (dataSend) => {
   // async..await is not allowed in global scope, must use a wrapper
   // send mail with defined transport object
   const info = await transporter.sendMail({
-    from: '"Hello from Evil Shadow 👻" <ducduy1110uit@gmail.com>', // sender address
+    from: '"Booking Care Evil Shadow Web 👻" <ducduy1110uit@gmail.com>', // sender address
     to: dataSend.receiverEmail, // list of receivers
     subject: "Thông tin đặt lịch khám bệnh", // Subject line
     html: getBodyHTMLEmail(dataSend),
@@ -52,4 +52,57 @@ let getBodyHTMLEmail = (dataSend) => {
   return result;
 };
 
-export { sendSimpleEmail };
+let sendAttachment = async (dataSend) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_APP,
+        pass: process.env.EMAIL_APP_PASSWORD,
+      },
+    });
+
+    const info = await transporter.sendMail({
+      from: '"Booking Care Evil Shadow Web 👻" <ducduy1110uit@gmail.com>', // sender address
+      to: dataSend.email, // list of receivers
+      subject: "Kết quả đặt lịch khám bệnh", // Subject line
+      html: getBodyHTMLEmailRemedy(dataSend),
+      attachments: [
+        {
+          // encoded string as an attachment
+          filename: `remedy-${dataSend.patientId}-${new Date().getTime()}.png`,
+          content: dataSend.imgBase64.split("base64,")[1],
+          encoding: "base64",
+        },
+      ],
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+let getBodyHTMLEmailRemedy = (dataSend) => {
+  let result = "";
+  if (dataSend.language === "vi") {
+    result = `
+    <h3>Xin chào ${dataSend.patientName}!</h3>
+    <p>Bạn nhận được email này vì đã đặt lịch khám bênh online trên Booking Care Evil Shadow Web thành công!</p>
+    <p>Thông tin đơn thuốc / hóa đơn được gửi trong file đính kèm.</p>
+    <div>Xin chân thành cảm ơn!</div>
+    `;
+  }
+  if (dataSend.language === "en") {
+    result = `
+    <h3>Hello ${dataSend.patientName}!</h3>
+    <p>You are receiving this email because you have successfully booked an online medical appointment on Booking Care Evil Shadow Web!</p>
+    <p>Prescription / invoice information is sent in the attached file.</p>
+    <div>Thank you very much!</div>
+  `;
+  }
+
+  return result;
+};
+
+export { sendSimpleEmail, sendAttachment };
