@@ -546,7 +546,13 @@ let getListPatientForDoctor = async (doctorId, date) => {
 
 let sendRemedy = async (data) => {
   try {
-    if (!data.email || !data.doctorId || !data.patientId || !data.timeType) {
+    if (
+      !data.email ||
+      !data.doctorId ||
+      !data.patientId ||
+      !data.timeType ||
+      !data.imgBase64
+    ) {
       return {
         errCode: 1,
         message: "Missing required parameters!",
