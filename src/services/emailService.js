@@ -38,7 +38,7 @@ let getBodyHTMLEmail = (dataSend) => {
   }
   if (dataSend.language === "en") {
     result = `
-    <h3>$Hello {dataSend.patientName}!</h3>
+    <h3>Hello ${dataSend.patientName}!</h3>
     <p>You received this email because you booked an online appointment on Booking Care Evil Shadow Web.</p>
     <p>Appointment details:</p>
     <div><b>Time: ${dataSend.time}</b></div>

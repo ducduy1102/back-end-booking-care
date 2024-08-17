@@ -504,7 +504,13 @@ let getListPatientForDoctor = async (doctorId, date) => {
         {
           model: db.Users,
           as: "patientData",
-          attributes: ["email", "address", "firstName", "gender"],
+          attributes: [
+            "email",
+            "address",
+            "firstName",
+            "gender",
+            "phoneNumber",
+          ],
           include: [
             {
               model: db.AllCodes,
@@ -512,6 +518,11 @@ let getListPatientForDoctor = async (doctorId, date) => {
               attributes: ["valueVi", "valueEn"],
             },
           ],
+        },
+        {
+          model: db.AllCodes,
+          as: "timeTypeDataPatient",
+          attributes: ["valueVi", "valueEn"],
         },
       ],
       raw: false,

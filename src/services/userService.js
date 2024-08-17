@@ -37,7 +37,6 @@ const handleUserLogin = async (email, password) => {
       },
       raw: true,
     });
-    // console.log("usser", user);
     if (user) {
       let isCorrectPassword = await checkUserPassword(password, user.password);
       if (isCorrectPassword) {
@@ -45,6 +44,7 @@ const handleUserLogin = async (email, password) => {
           errCode: 0,
           message: "Login successfully!",
           user: {
+            id: user.id,
             email: user.email,
             roleId: user.roleId,
             firstName: user.firstName,

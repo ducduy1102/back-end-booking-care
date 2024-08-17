@@ -18,7 +18,8 @@ let postBookAppointment = async (data) => {
       !data.fullname ||
       !data.selectedGender ||
       !data.address ||
-      !data.fullname
+      !data.fullname ||
+      !data.phoneNumber
     ) {
       return {
         errCode: 1,
@@ -45,6 +46,7 @@ let postBookAppointment = async (data) => {
         address: data.address,
         gender: data.selectedGender,
         firstName: data.fullname,
+        phoneNumber: data.phoneNumber,
       },
     });
 
