@@ -7,6 +7,7 @@ import {
   getScheduleByDate,
   getExtraInforDoctorById,
   getProfileDoctorById,
+  getListPatientForDoctor,
 } from "../services/doctorService";
 
 const getTopDoctorHomeController = async (req, res) => {
@@ -119,6 +120,21 @@ const getProfileDoctorByIdController = async (req, res) => {
   }
 };
 
+const getListPatientForDoctorController = async (req, res) => {
+  try {
+    let doctorId = req.query.doctorId;
+    let date = req.query.date;
+    let infor = await getListPatientForDoctor(doctorId, date);
+    return res.status(200).json(infor);
+  } catch (error) {
+    console.log(error);
+    res.status(200).json({
+      errCode: -1,
+      message: "Something wrongs in server...",
+    });
+  }
+};
+
 export {
   getTopDoctorHomeController,
   getAllDoctorsController,
@@ -128,4 +144,5 @@ export {
   getScheduleByDateController,
   getExtraInforDoctorByIdController,
   getProfileDoctorByIdController,
+  getListPatientForDoctorController,
 };

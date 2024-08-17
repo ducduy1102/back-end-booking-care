@@ -15,6 +15,9 @@ let postBookAppointment = async (data) => {
       !data.doctorId ||
       !data.timeType ||
       !data.date ||
+      !data.fullname ||
+      !data.selectedGender ||
+      !data.address ||
       !data.fullname
     ) {
       return {
@@ -39,6 +42,9 @@ let postBookAppointment = async (data) => {
       defaults: {
         email: data.email,
         roleId: "R3",
+        address: data.address,
+        gender: data.selectedGender,
+        firstName: data.fullname,
       },
     });
 

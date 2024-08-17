@@ -35,6 +35,10 @@ let getTopDoctorHome = async (limitInput) => {
     };
   } catch (error) {
     console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
   }
 };
 
@@ -56,6 +60,10 @@ let getAllDoctors = async () => {
     };
   } catch (error) {
     console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
   }
 };
 
@@ -173,6 +181,10 @@ let saveDetailInforDoctor = async (inputData) => {
     };
   } catch (error) {
     console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
   }
 };
 
@@ -246,6 +258,10 @@ let getDetailDoctorById = async (inputId) => {
     };
   } catch (error) {
     console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
   }
 };
 
@@ -288,6 +304,10 @@ let bulkCreateSchedule = async (data) => {
     };
   } catch (error) {
     console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
   }
 };
 
@@ -330,6 +350,10 @@ let getScheduleByDate = async (doctorId, date) => {
     };
   } catch (error) {
     console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
   }
 };
 
@@ -378,6 +402,10 @@ let getExtraInforDoctorById = async (doctorId) => {
     };
   } catch (error) {
     console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
   }
 };
 
@@ -451,9 +479,55 @@ let getProfileDoctorById = async (doctorId) => {
   } catch (error) {
     console.log(error);
     return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+let getListPatientForDoctor = async (doctorId, date) => {
+  try {
+    if (!doctorId || !date) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+
+    let data = await db.Bookings.findAll({
+      where: {
+        statusId: "S2",
+        doctorId: doctorId,
+        date: date,
+      },
+      include: [
+        {
+          model: db.Users,
+          as: "patientData",
+          attributes: ["email", "address", "firstName", "gender"],
+          include: [
+            {
+              model: db.AllCodes,
+              as: "genderData",
+              attributes: ["valueVi", "valueEn"],
+            },
+          ],
+        },
+      ],
+      raw: false,
+      nest: true,
+    });
+
+    return {
       errCode: 0,
-      message: "Get extra doctor by id successfully!",
+      message: "Get list patient for doctor successfully!",
       data: data,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
     };
   }
 };
@@ -467,4 +541,5 @@ export {
   getScheduleByDate,
   getExtraInforDoctorById,
   getProfileDoctorById,
+  getListPatientForDoctor,
 };

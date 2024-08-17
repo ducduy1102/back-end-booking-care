@@ -25,6 +25,7 @@ import {
   getScheduleByDateController,
   getExtraInforDoctorByIdController,
   getProfileDoctorByIdController,
+  getListPatientForDoctorController,
 } from "../controllers/doctorController";
 import {
   postBookAppointmentController,
@@ -75,6 +76,10 @@ const initWebRoutes = (app) => {
     getExtraInforDoctorByIdController
   );
   router.get("/api/get-profile-doctor-by-id", getProfileDoctorByIdController);
+  router.get(
+    "/api/get-list-patient-for-doctor",
+    getListPatientForDoctorController
+  );
 
   // patient
   router.post("/api/patient-book-appointment", postBookAppointmentController);
