@@ -119,4 +119,101 @@ let getDetailSpecialtyById = async (specialtyId, location) => {
   }
 };
 
-export { createNewSpecialty, getAllSpecialty, getDetailSpecialtyById };
+const deleteSpecialty = async (speciatyId) => {
+  try {
+    let specialty = await db.Specialties.findOne({
+      where: { id: speciatyId },
+    });
+    if (!specialty) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+    await db.Specialties.destroy({
+      where: {
+        id: speciatyId,
+      },
+    });
+
+    return {
+      errCode: 0,
+      message: "Delete specialty successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+let editSpecialty = async (data) => {
+  try {
+    if (
+      !data.id ||
+      !data.name ||
+      !data.imageBase64 ||
+      !data.descriptionHTML | !data.descriptionMarkdown
+    ) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+
+    let specialty = await db.Specialties.findOne({
+      where: { id: data.id },
+    });
+    if (!specialty) {
+      return {
+        errCode: 2,
+        message: "Specialty isn't exist.",
+      };
+    }
+    if (data.imageBase64) {
+      await db.Specialties.update(
+        {
+          name: data.name,
+          image: data.imageBase64,
+          descriptionHTML: data.descriptionHTML,
+          descriptionMarkdown: data.descriptionMarkdown,
+        },
+        {
+          where: { id: data.id },
+        }
+      );
+    } else {
+      await db.Specialties.update(
+        {
+          name: data.name,
+          descriptionHTML: data.descriptionHTML,
+          descriptionMarkdown: data.descriptionMarkdown,
+        },
+        {
+          where: { id: data.id },
+        }
+      );
+    }
+
+    return {
+      errCode: 0,
+      message: "Update specialty successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+export {
+  createNewSpecialty,
+  getAllSpecialty,
+  getDetailSpecialtyById,
+  deleteSpecialty,
+  editSpecialty,
+};

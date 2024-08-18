@@ -37,6 +37,8 @@ import {
   createNewSpecialtyController,
   getAllSpecialtyController,
   getDetailSpecialtyByIdController,
+  deleteSpecialtyController,
+  handleEditSpecialtyController,
 } from "../controllers/specialtyController";
 import {
   createNewClinicController,
@@ -98,6 +100,8 @@ const initWebRoutes = (app) => {
     "/api/get-detail-specialty-by-id",
     getDetailSpecialtyByIdController
   );
+  router.delete("/api/delete-specialty", deleteSpecialtyController);
+  router.put("/api/edit-specialty", handleEditSpecialtyController);
 
   // clinic
   router.post("/api/create-new-clinic", createNewClinicController);

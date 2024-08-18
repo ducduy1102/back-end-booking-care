@@ -2,6 +2,8 @@ import {
   createNewSpecialty,
   getAllSpecialty,
   getDetailSpecialtyById,
+  deleteSpecialty,
+  editSpecialty,
 } from "../services/specialtyService";
 
 const createNewSpecialtyController = async (req, res) => {
@@ -45,8 +47,37 @@ const getDetailSpecialtyByIdController = async (req, res) => {
   }
 };
 
+const deleteSpecialtyController = async (req, res) => {
+  try {
+    let specialtyId = req.body.id;
+    let data = await deleteSpecialty(specialtyId);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      message: "Something wrongs in service...",
+    });
+  }
+};
+
+const handleEditSpecialtyController = async (req, res) => {
+  try {
+    let data = await editSpecialty(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      message: "Something wrongs in service...",
+    });
+  }
+};
+
 export {
   createNewSpecialtyController,
   getAllSpecialtyController,
   getDetailSpecialtyByIdController,
+  deleteSpecialtyController,
+  handleEditSpecialtyController,
 };
