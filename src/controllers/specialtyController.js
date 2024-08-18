@@ -61,7 +61,7 @@ const deleteSpecialtyController = async (req, res) => {
   }
 };
 
-const handleEditSpecialtyController = async (req, res) => {
+const editSpecialtyController = async (req, res) => {
   try {
     let data = await editSpecialty(req.body);
     return res.status(200).json(data);
@@ -79,5 +79,5 @@ export {
   getAllSpecialtyController,
   getDetailSpecialtyByIdController,
   deleteSpecialtyController,
-  handleEditSpecialtyController,
+  editSpecialtyController,
 };

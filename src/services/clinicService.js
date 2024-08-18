@@ -123,4 +123,104 @@ let getDetailClinicById = async (clinicId) => {
   }
 };
 
-export { createNewClinic, getAllClinic, getDetailClinicById };
+const deleteClinic = async (clinicId) => {
+  try {
+    let clinic = await db.Clinics.findOne({
+      where: { id: clinicId },
+    });
+    if (!clinic) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+    await db.Clinics.destroy({
+      where: {
+        id: clinicId,
+      },
+    });
+
+    return {
+      errCode: 0,
+      message: "Delete clinic successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+let editClinic = async (data) => {
+  try {
+    if (
+      !data.id ||
+      !data.name ||
+      !data.address ||
+      !data.imageBase64 ||
+      !data.descriptionHTML | !data.descriptionMarkdown
+    ) {
+      return {
+        errCode: 1,
+        message: "Missing required parameters!",
+      };
+    }
+
+    let clinic = await db.Clinics.findOne({
+      where: { id: data.id },
+    });
+    if (!clinic) {
+      return {
+        errCode: 2,
+        message: "Clinic isn't exist.",
+      };
+    }
+    if (data.imageBase64) {
+      await db.Clinics.update(
+        {
+          name: data.name,
+          address: data.address,
+          image: data.imageBase64,
+          descriptionHTML: data.descriptionHTML,
+          descriptionMarkdown: data.descriptionMarkdown,
+        },
+        {
+          where: { id: data.id },
+        }
+      );
+    } else {
+      await db.Clinics.update(
+        {
+          name: data.name,
+          address: data.address,
+          descriptionHTML: data.descriptionHTML,
+          descriptionMarkdown: data.descriptionMarkdown,
+        },
+        {
+          where: { id: data.id },
+        }
+      );
+    }
+
+    return {
+      errCode: 0,
+      message: "Update clinic successfully!",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+export {
+  createNewClinic,
+  getAllClinic,
+  getDetailClinicById,
+  deleteClinic,
+  editClinic,
+};

@@ -38,12 +38,14 @@ import {
   getAllSpecialtyController,
   getDetailSpecialtyByIdController,
   deleteSpecialtyController,
-  handleEditSpecialtyController,
+  editSpecialtyController,
 } from "../controllers/specialtyController";
 import {
   createNewClinicController,
   getAllClinicController,
   getDetailClinicByIdController,
+  deleteClinicController,
+  editClinicController,
 } from "../controllers/clinicController";
 
 const router = express.Router();
@@ -101,12 +103,14 @@ const initWebRoutes = (app) => {
     getDetailSpecialtyByIdController
   );
   router.delete("/api/delete-specialty", deleteSpecialtyController);
-  router.put("/api/edit-specialty", handleEditSpecialtyController);
+  router.put("/api/edit-specialty", editSpecialtyController);
 
   // clinic
   router.post("/api/create-new-clinic", createNewClinicController);
   router.get("/api/get-clinic", getAllClinicController);
   router.get("/api/get-detail-clinic-by-id", getDetailClinicByIdController);
+  router.delete("/api/delete-clinic", deleteClinicController);
+  router.put("/api/edit-clinic", editClinicController);
 
   return app.use("/", router);
 };
