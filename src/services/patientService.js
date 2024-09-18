@@ -8,24 +8,81 @@ let buildUrlEmail = (doctorId, token) => {
   return result;
 };
 
+let checkRequiredFields = (inputData) => {
+  let arrFields = [
+    "fullname",
+    "phoneNumber",
+    "email",
+    "address",
+    "doctorId",
+    "timeType",
+    "date",
+    "reason",
+    "birthday",
+    "selectedGender",
+  ];
+
+  let isValid = true;
+  let element = "";
+
+  // Regex pattern for email validation
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  for (let i = 0; i < arrFields.length; i++) {
+    // Additional condition to check if it's the email field and validate it
+    if (arrFields[i] === "email" && !emailRegex.test(inputData[arrFields[i]])) {
+      isValid = false;
+      // element = arrFields[i];
+      element = "Invalid email format";
+      break;
+    }
+
+    if (!inputData[arrFields[i]]) {
+      isValid = false;
+      element = arrFields[i];
+      break;
+    }
+  }
+  return {
+    isValid,
+    element,
+  };
+};
+
 let postBookAppointment = async (data) => {
   try {
-    if (
-      !data.email ||
-      !data.doctorId ||
-      !data.timeType ||
-      !data.date ||
-      !data.fullname ||
-      !data.selectedGender ||
-      !data.address ||
-      !data.fullname ||
-      !data.phoneNumber
-    ) {
+    // if (
+    //   !data.email ||
+    //   !data.doctorId ||
+    //   !data.timeType ||
+    //   !data.date ||
+    //   !data.fullname ||
+    //   !data.selectedGender ||
+    //   !data.address ||
+    //   !data.fullname ||
+    //   !data.phoneNumber
+    // ) {
+    //   return {
+    //     errCode: 1,
+    //     message: "Missing required parameters!",
+    //   };
+    // }
+
+    let checkObj = checkRequiredFields(data);
+
+    if (checkObj.isValid === false) {
+      if (checkObj.element === "Invalid email format") {
+        return {
+          errCode: 1,
+          message: `Invalid email format`,
+        };
+      }
       return {
         errCode: 1,
-        message: "Missing required parameters!",
+        message: `Missing parameters ${checkObj.element} `,
       };
     }
+
     let token = uuidv4();
 
     await sendSimpleEmail({
@@ -47,6 +104,7 @@ let postBookAppointment = async (data) => {
         gender: data.selectedGender,
         firstName: data.fullname,
         phoneNumber: data.phoneNumber,
+        birthday: data.birthday,
       },
     });
 
@@ -61,6 +119,7 @@ let postBookAppointment = async (data) => {
           date: data.date,
           timeType: data.timeType,
           token: token,
+          reason: data.reason,
         },
       });
     }

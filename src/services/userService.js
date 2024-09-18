@@ -161,7 +161,13 @@ const createNewUser = async (data) => {
 
 const editUser = async (data) => {
   try {
-    if (!data.id || !data.roleId || !data.positionId || !data.gender) {
+    if (
+      !data.id ||
+      !data.roleId ||
+      !data.positionId ||
+      !data.gender ||
+      !data.birthday
+    ) {
       return {
         errCode: 1,
         message: "Missing required parameters!",
@@ -194,6 +200,7 @@ const editUser = async (data) => {
         {
           firstName: data.firstName,
           lastName: data.lastName,
+          birthday: data.birthday,
           address: data.address,
           phoneNumber: data.phoneNumber,
           gender: data.gender,
@@ -210,6 +217,7 @@ const editUser = async (data) => {
         {
           firstName: data.firstName,
           lastName: data.lastName,
+          birthday: data.birthday,
           address: data.address,
           phoneNumber: data.phoneNumber,
           gender: data.gender,

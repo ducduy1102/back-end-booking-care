@@ -511,6 +511,7 @@ let getListPatientForDoctor = async (doctorId, date) => {
             "firstName",
             "gender",
             "phoneNumber",
+            "birthday",
           ],
           include: [
             {

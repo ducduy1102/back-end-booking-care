@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       date: DataTypes.STRING,
       timeType: DataTypes.STRING,
       token: DataTypes.STRING,
+      reason: DataTypes.TEXT,
     },
     {
       sequelize,
