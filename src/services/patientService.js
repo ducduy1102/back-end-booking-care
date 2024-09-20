@@ -100,6 +100,7 @@ let postBookAppointment = async (data) => {
       defaults: {
         email: data.email,
         roleId: "R3",
+        positionId: "P5",
         address: data.address,
         gender: data.selectedGender,
         firstName: data.fullname,
