@@ -35,6 +35,67 @@ let createNewClinic = async (data) => {
   }
 };
 
+let getClinicWithPagination = async (page, limit) => {
+  try {
+    let offset = (page - 1) * limit;
+    const { count, rows } = await db.Clinics.findAndCountAll({
+      offset: offset,
+      limit: limit,
+      attributes: {
+        exclude: [
+          "descIntroductionHTML",
+          "descIntroduction",
+          "descProfessionalStrengthsHTML",
+          "descProfessionalStrengths",
+          "descEquipmentHTML",
+          "descEquipment",
+          "descLocationHTML",
+          "descLocation",
+          "descProcessHTML",
+          "descProcess",
+        ],
+      },
+      order: [["id", "DESC"]],
+    });
+
+    let totalPages = Math.ceil(count / limit);
+
+    let dataPages = {
+      totalRows: count,
+      totalPages: totalPages,
+      clinics: rows,
+    };
+
+    let data = dataPages.clinics;
+    if (!data)
+      return {
+        errCode: 0,
+        message: "Get all clinic successfully!",
+        data: [],
+      };
+
+    if (data && data.length > 0) {
+      data.map((item) => {
+        item.image = new Buffer(item.image, "base64").toString("binary");
+        return item;
+      });
+    }
+
+    return {
+      errCode: 0,
+      message: "Get all clinic successfully!",
+      data: dataPages,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Something wrongs with service",
+      errCode: 1,
+      data: [],
+    };
+  }
+};
+
 let getAllClinic = async () => {
   try {
     let data = await db.Clinics.findAll({
@@ -219,6 +280,7 @@ let editClinic = async (data) => {
 
 export {
   createNewClinic,
+  getClinicWithPagination,
   getAllClinic,
   getDetailClinicById,
   deleteClinic,

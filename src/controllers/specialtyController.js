@@ -1,5 +1,6 @@
 import {
   createNewSpecialty,
+  getSpecialtyWithPagination,
   getAllSpecialty,
   getDetailSpecialtyById,
   deleteSpecialty,
@@ -21,8 +22,21 @@ const createNewSpecialtyController = async (req, res) => {
 
 const getAllSpecialtyController = async (req, res) => {
   try {
-    let data = await getAllSpecialty();
-    return res.status(200).json(data);
+    if (req.query.page && req.query.limit) {
+      let page = req.query.page;
+      let limit = req.query.limit;
+
+      let data = await getSpecialtyWithPagination(+page, +limit);
+
+      return res.status(200).json({
+        errCode: data.errCode,
+        message: data.message,
+        data: data.data,
+      });
+    } else {
+      let data = await getAllSpecialty();
+      return res.status(200).json(data);
+    }
   } catch (error) {
     console.log(error);
     return res.status(200).json({

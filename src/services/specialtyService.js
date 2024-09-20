@@ -33,6 +33,53 @@ let createNewSpecialty = async (data) => {
   }
 };
 
+let getSpecialtyWithPagination = async (page, limit) => {
+  try {
+    let offset = (page - 1) * limit;
+    const { count, rows } = await db.Specialties.findAndCountAll({
+      offset: offset,
+      limit: limit,
+      order: [["id", "DESC"]],
+    });
+
+    let totalPages = Math.ceil(count / limit);
+
+    let dataPages = {
+      totalRows: count,
+      totalPages: totalPages,
+      specialties: rows,
+    };
+
+    let data = dataPages.specialties;
+    if (!data)
+      return {
+        errCode: 0,
+        message: "Get specialty successfully!",
+        data: [],
+      };
+
+    if (data && data.length > 0) {
+      data.map((item) => {
+        item.image = new Buffer(item.image, "base64").toString("binary");
+        return item;
+      });
+    }
+
+    return {
+      errCode: 0,
+      message: "Get specialty successfully!",
+      data: dataPages,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Something wrongs with service",
+      errCode: 1,
+      data: [],
+    };
+  }
+};
+
 let getAllSpecialty = async () => {
   try {
     let data = await db.Specialties.findAll();
@@ -212,6 +259,7 @@ let editSpecialty = async (data) => {
 
 export {
   createNewSpecialty,
+  getSpecialtyWithPagination,
   getAllSpecialty,
   getDetailSpecialtyById,
   deleteSpecialty,

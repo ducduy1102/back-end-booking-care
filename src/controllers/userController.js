@@ -5,6 +5,7 @@ import {
   editUser,
   deleteUser,
   getAllCode,
+  getUserWithPagination,
 } from "../services/userService";
 
 const handleLogin = async (req, res) => {
@@ -29,23 +30,37 @@ const handleLogin = async (req, res) => {
 };
 
 const handleGetAllUsersController = async (req, res) => {
-  let id = req.query.id; // ALL, SINGLE (id)
-  let users = await getAllUsers(id);
-  // console.log(users);
+  if (req.query.page && req.query.limit) {
+    let page = req.query.page;
+    let limit = req.query.limit;
 
-  if (!id) {
+    // Thêm "+" convert string -> Number
+    let data = await getUserWithPagination(+page, +limit);
+
     return res.status(200).json({
-      errCode: 1,
-      message: "Missing required parameters",
-      users: [],
+      errCode: data.errorCode,
+      message: data.message,
+      data: data.data,
+    });
+  } else {
+    let id = req.query.id; // ALL, SINGLE (id)
+    let users = await getAllUsers(id);
+    // console.log(users);
+
+    if (!id) {
+      return res.status(200).json({
+        errCode: 1,
+        message: "Missing required parameters",
+        users: [],
+      });
+    }
+
+    return res.status(200).json({
+      errCode: 0,
+      message: "Ok",
+      users: users,
     });
   }
-
-  return res.status(200).json({
-    errCode: 0,
-    message: "Ok",
-    users: users,
-  });
 };
 
 const handleCreateNewUserController = async (req, res) => {

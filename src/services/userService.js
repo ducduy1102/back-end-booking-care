@@ -1,4 +1,3 @@
-import { where } from "sequelize";
 import db from "../models";
 import bcrypt from "bcryptjs";
 
@@ -63,6 +62,41 @@ const handleUserLogin = async (email, password) => {
     return {
       message: "Something wrongs in service...",
       errCode: -1,
+    };
+  }
+};
+
+const getUserWithPagination = async (page, limit) => {
+  try {
+    let offset = (page - 1) * limit;
+    const { count, rows } = await db.Users.findAndCountAll({
+      offset: offset,
+      limit: limit,
+      attributes: {
+        exclude: ["password"],
+      },
+      order: [["id", "DESC"]],
+    });
+
+    let totalPages = Math.ceil(count / limit);
+
+    let dataPages = {
+      totalRows: count,
+      totalPages: totalPages,
+      users: rows,
+    };
+
+    return {
+      message: "Get data successfully!",
+      errorCode: 0,
+      data: dataPages,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Something wrongs with service",
+      errorCode: 1,
+      data: [],
     };
   }
 };
@@ -303,6 +337,7 @@ const getAllCode = async (type) => {
 
 export {
   handleUserLogin,
+  getUserWithPagination,
   getAllUsers,
   createNewUser,
   editUser,
