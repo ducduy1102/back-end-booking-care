@@ -25,6 +25,22 @@ let getTopDoctorHome = async (limitInput) => {
           as: "genderData",
           attributes: ["valueEn", "valueVi"],
         },
+        {
+          model: db.Doctor_Infor,
+          attributes: ["provinceId", "clinicId"],
+          include: [
+            {
+              model: db.Specialties,
+              as: "speciatyData",
+              attributes: ["name", "nameEn"],
+            },
+            {
+              model: db.AllCodes,
+              as: "provinceTypeData",
+              attributes: ["valueVi", "valueEn"],
+            },
+          ],
+        },
       ],
       nest: true,
       raw: true,
@@ -33,6 +49,67 @@ let getTopDoctorHome = async (limitInput) => {
       errCode: 0,
       message: "Get top doctor successfully!",
       data: users,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      errCode: -1,
+      message: "Something wrongs in service...",
+    };
+  }
+};
+
+let getListDoctorHome = async () => {
+  try {
+    let { count, rows } = await db.Users.findAndCountAll({
+      where: {
+        roleId: "R2",
+      },
+      order: [["createdAt", "DESC"]],
+      attributes: {
+        exclude: ["password"],
+      },
+      include: [
+        {
+          model: db.AllCodes,
+          as: "positionData",
+          attributes: ["valueEn", "valueVi"],
+        },
+        {
+          model: db.AllCodes,
+          as: "genderData",
+          attributes: ["valueEn", "valueVi"],
+        },
+        {
+          model: db.Doctor_Infor,
+          attributes: ["provinceId", "clinicId"],
+          include: [
+            {
+              model: db.Specialties,
+              as: "speciatyData",
+              attributes: ["name", "nameEn"],
+            },
+            {
+              model: db.AllCodes,
+              as: "provinceTypeData",
+              attributes: ["valueVi", "valueEn"],
+            },
+          ],
+        },
+      ],
+      nest: true,
+      raw: true,
+    });
+
+    let dataPages = {
+      limitInput: count,
+      doctors: rows,
+    };
+
+    return {
+      errCode: 0,
+      message: "Get list doctor successfully!",
+      data: dataPages,
     };
   } catch (error) {
     console.log(error);
@@ -593,6 +670,7 @@ let sendRemedy = async (data) => {
 
 export {
   getTopDoctorHome,
+  getListDoctorHome,
   getAllDoctors,
   saveDetailInforDoctor,
   getDetailDoctorById,

@@ -1,5 +1,6 @@
 import {
   getTopDoctorHome,
+  getListDoctorHome,
   getAllDoctors,
   saveDetailInforDoctor,
   getDetailDoctorById,
@@ -12,10 +13,19 @@ import {
 } from "../services/doctorService";
 
 const getTopDoctorHomeController = async (req, res) => {
-  let limit = req.query.limit;
-  if (!limit) limit = 10;
   try {
-    let response = await getTopDoctorHome(+limit);
+    let limit = req.query.limit;
+    let response = "";
+    if (!limit) {
+      response = await getListDoctorHome();
+      limit = response.data.limitInput;
+    } else {
+      response = await getTopDoctorHome(+limit);
+    }
+
+    // if (!limit) limit = 10;
+    // let response = await getTopDoctorHome(+limit);
+
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
