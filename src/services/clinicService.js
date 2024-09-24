@@ -16,6 +16,7 @@ let createNewClinic = async (data) => {
 
     await db.Clinics.create({
       name: data.name,
+      nameEn: data.nameEn ? data.nameEn : data.name,
       address: data.address,
       image: data.imageBase64,
       descriptionHTML: data.descriptionHTML,

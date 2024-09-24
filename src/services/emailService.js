@@ -33,7 +33,7 @@ let getBodyHTMLEmail = (dataSend) => {
     <div><b>Bác sĩ: ${dataSend.doctorName}</b></div>
     <p>Nếu các thông tin trên là đúng sự thật, vui lòng click vào đường link bên dưới để xác nhận và hoàn tất thủ tục đặt lịch khám bệnh.</p>
     <a href=${dataSend.redirectLink} target="_blank">Click here</a>
-    <div>Xin chân thành cảm ơn!</div>
+    <div>Chân thành cảm ơn!</div>
     `;
   }
   if (dataSend.language === "en") {
@@ -90,7 +90,7 @@ let getBodyHTMLEmailRemedy = (dataSend) => {
     <h3>Xin chào ${dataSend.patientName}!</h3>
     <p>Bạn nhận được email này vì đã đặt lịch khám bênh online trên Booking Care Evil Shadow Web thành công!</p>
     <p>Thông tin đơn thuốc / hóa đơn được gửi trong file đính kèm.</p>
-    <div>Xin chân thành cảm ơn!</div>
+    <div>Chân thành cảm ơn!</div>
     `;
   }
   if (dataSend.language === "en") {
