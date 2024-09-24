@@ -15,6 +15,7 @@ let createNewSpecialty = async (data) => {
 
     await db.Specialties.create({
       name: data.name,
+      nameEn: data.nameEn ? data.nameEn : data.name,
       image: data.imageBase64,
       descriptionHTML: data.descriptionHTML,
       descriptionMarkdown: data.descriptionMarkdown,

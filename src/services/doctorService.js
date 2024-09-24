@@ -189,6 +189,8 @@ let saveDetailInforDoctor = async (inputData) => {
     // upsert to Markdowns table
     if (inputData.action === "CREATE") {
       await db.Markdowns.create({
+        specialtyId: inputData.specialtyId,
+        clinicId: inputData.clinicId,
         contentHTML: inputData.contentHTML,
         contentMarkdown: inputData.contentMarkdown,
         description: inputData.description,
@@ -206,6 +208,8 @@ let saveDetailInforDoctor = async (inputData) => {
       if (doctorMarkdown) {
         await db.Markdowns.update(
           {
+            specialtyId: inputData.specialtyId,
+            clinicId: inputData.clinicId,
             contentHTML: inputData.contentHTML,
             contentMarkdown: inputData.contentMarkdown,
             description: inputData.description,
